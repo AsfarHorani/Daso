@@ -1,0 +1,163 @@
+/* base style */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root,
+.App {
+  height: 100%;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  --app-pc1: #202225;
+  --app-pc2: #2F3136;
+  --app-pc3: #36393F;
+  --app-pc4:  #96989D;
+}
+
+
+.input{
+  padding: 5px 20px;
+  background-color: var(--app-pc1);
+  border: none;
+  border-radius: 3px;
+  font-size: 1rem;
+  color: var(--app-pc4);
+}
+
+/* app */
+
+.App {
+  background-color: var(--app-pc1);
+  display: flex;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* sidebar */
+
+.Sidebar {
+  flex: 0.3;
+  display: flex;
+  justify-content: flex-start;
+  background-color: var(--app-pc1);
+}
+
+.sidebar-menu {
+  flex: 0.3;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 10px;
+
+}
+
+.Sidebar-item {
+  margin: 0 auto;
+}
+
+.Sidebar-icon {
+  font-size: 3rem !important;
+  color: white !important;
+
+  flex-basis: 1;
+}
+
+.logo-container {
+  border-bottom: 2px solid var(--app-pc3);
+}
+
+
+/* .Conversations */
+
+.Conversations {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: var(--app-pc2);
+  color: whitesmoke;
+  padding: 10px;
+}
+
+.convs-header {
+  flex: 0.2;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  border-bottom: 2px solid var(--app-pc1);
+}
+
+.convs-header>div {
+  padding: 20px;
+}
+
+.convs-header > .input-container{
+  border-bottom: 1px solid var(--app-pc1);
+  margin: 0 20px;
+  padding: 20px 0;
+}
+
+
+.conticon-container {
+
+  display: flex;
+
+}
+
+.conticon-container > label{
+  padding-left: 10px;
+
+}
+
+.convos-sec{
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 20px;
+}
+.convos-sec > h2{
+  padding-bottom: 10px;
+}
+.all-convs{
+  flex:1;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.conv-item-container{
+   padding: 0 10px 10px 10px;
+}
+
+.conversations-item{
+  display: flex;  
+  align-items: center;
+}
+ .convo-icon{
+  font-size: 2.5rem !important;
+}
+.conversations-item > .convo-display{
+  padding-left: 10px;
+}
+
+.link {
+  text-decoration: none;
+  color: aliceblue;
+}
+
+
+
+/* Conversation */
+
+.conversation-screen {
+  flex: 1;
+  background-color: var(--app-pc3);
+}
