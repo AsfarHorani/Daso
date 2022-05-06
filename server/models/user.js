@@ -6,6 +6,9 @@ const userSchema = new Schema({
     name: {
         type: String
     },
+    username: {
+        type: String
+    },
     email: {
         type: String,
         required: true
@@ -16,7 +19,8 @@ const userSchema = new Schema({
        
     },
     contacts: {
-        type: Array,
+        type: Schema.Types.ObjectId,
+        ref: 'User',
         default:[]
     }   
 

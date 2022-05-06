@@ -1,0 +1,36 @@
+.login,
+.signup{
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    background-color: var(--app-pc1);
+    padding: 30px;
+    border-radius: 10px;
+}
+.login > form,
+.signup > form{
+    display: flex;
+    flex-direction: column;
+}
+.login > form > input,
+.signup > form > input{
+    margin: 10px 10px 0 10px;
+    background-color: var(--app-pc3);
+}
+
+.login > form> p,
+.signup > form> p{
+    margin: 0px 0px 0px 10px;
+    color: red;
+    font-size: 0.8rem;
+}
+.login > form> a,
+.signup > form> a{
+     padding: 0 0 0 10px;
+}
+
+.button{
+    background-color: #5865F2 !important;
+    margin: 10px 10px 0 10px !important;
+    width: 50% !important;
+}
