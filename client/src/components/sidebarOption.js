@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 function sidebarOption(props) {
     return (
         <div className="Sidebar-item">
-            <Link className='link' to={props.item.to} key={props.index}>
+            <Link className='link' to={props.item.to} key={props.index} onClick={props.item.onClick}>
 
                 <div>
                     {props.item.icon}

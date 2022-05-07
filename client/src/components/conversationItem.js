@@ -4,7 +4,7 @@ import { AccountCircle } from '@material-ui/icons';
 
 function conversationItem({item,index}) {
     return (
-        <div key ={index}className="conversations-item">
+        <div key={index} className="conversations-item">
             <div >
                 {item.icon ? item.icon : <AccountCircle className="convo-icon"/> }
             </div>

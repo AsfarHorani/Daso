@@ -7,22 +7,28 @@ const userSchema = new Schema({
         type: String
     },
     username: {
-        type: String
+        type: String,
+        required: true,
+        unique: true
     },
     email: {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
-    password:{
+    password: {
         type: String,
         req: true
-       
+
     },
-    contacts: {
-        type: Schema.Types.ObjectId,
-        ref: 'User',
-        default:[]
-    }   
+    imageUrl: {
+        type: String,
+
+    },
+    status:{
+        type: String,
+        default:""
+    }
 
 })
 

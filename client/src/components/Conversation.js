@@ -71,8 +71,8 @@ const Conversation = (props) => {
 
     let mgsComp = null;
     if (msgs) {
-        mgsComp = msgs.map(msg => {
-            return <Message msg={msg} />
+        mgsComp = msgs.map((msg,index) => {
+            return <Message  key={index} msg={msg} />
         })
     }
 

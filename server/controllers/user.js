@@ -7,17 +7,24 @@ const jwt = require("jsonwebtoken");
 
 exports.signup = (req, res, next) => {
     const errors = validationResult(req);
+    console.log(req.body)
     if (!errors.isEmpty()) {
         const error = new Error('Validation failed.');
         error.statusCode = 422;
         error.data = errors.array();
         throw error;
     }
+    let pfp = null;
+    if (req.file) {
+        pfp = req.file.path;
+    }
+
     const name = req.body.name;
     const password = req.body.password;
     const email = req.body.email;
     const username = req.body.username;
 
+    console.log(req.file);
     console.log(req.body)
     bcrypt.hash(password, 12)
         .then(hashedPassword => {
@@ -25,7 +32,8 @@ exports.signup = (req, res, next) => {
                 name: name,
                 email: email,
                 password: hashedPassword,
-                username:username
+                username: username,
+                imageUrl: pfp
             })
             return user.save()
         }).then(result => {
@@ -46,6 +54,7 @@ exports.signup = (req, res, next) => {
 }
 exports.login = (req, res, next) => {
     const errors = validationResult(req);
+    console.log(req.body)
     if (!errors.isEmpty()) {
         const error = new Error('Validation failed.');
         error.statusCode = 422;
@@ -87,7 +96,7 @@ exports.login = (req, res, next) => {
             console.log(loadedUser)
             res.status(200).json({
                 token: token,
-                userId: loadedUser._id,
+                userInfo: loadedUser,
                 message: "Login succesfull"
             })
             console.log('login success')
@@ -101,4 +110,18 @@ exports.login = (req, res, next) => {
         })
 
 
+}
+
+
+exports.searchUsers = (req, res, next) => {
+    const kw = req.params.query;
+    console.log(kw)
+    
+    User.find({ name: { $regex: '.*' + kw + '.*' } }).then(result => {
+        res.status(200).json({
+            result: result
+        })
+    }).catch(err => {
+        console.log(err)
+    })
 }

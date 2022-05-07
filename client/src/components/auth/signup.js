@@ -4,26 +4,37 @@ import { Button } from '@material-ui/core';
 import * as yup from "yup";
 import './auth.css'
 import { Link, useNavigate } from 'react-router-dom';
+function Signup(props) {
 
-function Signup() {
-
+    console.log(props)
+    const [image, setImage] = useState(null);
     const navigate = useNavigate();
     const formik = useFormik({
         initialValues: {
             name: "",
             email: "",
             username: "",
-            password: ""
+            password: "",
+
         },
         validationSchema: yup.object({
-            name: yup.string().max(15, "Must be 15 charaters or less").required("Required"),
+            name: yup.string().max(15, "Must be 15 charaters or less").min(3,"Name must have atleast 3 characters").required("Required"),
             username: yup.string().max(10, "Username must be between 10 and 5 characters").min(5, "Username must be between 10 and 5 characters").required("Required"),
             password: yup.string().required('No password provided.').min(8, 'Password is too short - should be 8 chars minimum.').matches(/[a-zA-Z]/, 'Password can only contain Latin letters.'),
             email: yup.string().email("Please enter a vaid email").required("Required")
         }),
         onSubmit: (values) => {
             console.log(formik.errors)
-            navigate("/")
+            const body = {
+                name: values.name,
+                email: values.email,
+                username: values.username,
+                password: values.password,
+                image: image
+            }
+       
+            props.signupHandler(body);
+      
         }
 
     }
@@ -35,7 +46,15 @@ function Signup() {
         <div className="signup" >
             <h2>Sign up</h2>
             <form onSubmit={formik.handleSubmit} >
+                <input
+                    id="imageUpload"
+                    type="file"
+                    name="image"
+                    placeholder="Profile picture (optional)"
+                    required="" capture
+                    onChange={(e) => { setImage(e.target.files[0]) }}
 
+                />
                 <input
                     key="name"
                     className='input'

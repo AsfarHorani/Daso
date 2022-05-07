@@ -5,7 +5,7 @@ import * as yup from "yup";
 import './auth.css'
 import { Link, useNavigate } from 'react-router-dom';
 
-function Login() {
+function Login(props) {
 
     const navigate = useNavigate();
     const formik = useFormik({
@@ -17,9 +17,10 @@ function Login() {
             password: yup.string().required('No password provided.').min(8, 'Password is too short - should be 8 chars minimum.').matches(/[a-zA-Z]/, 'Password can only contain Latin letters.'),
             email: yup.string().email("Please enter a vaid email").required("Required")
         }),
-        onSubmit: (values) => { 
-            console.log(formik.errors) 
-            navigate("/")
+        onSubmit: (values) => {
+            console.log(formik.errors)
+            props.signinHandler({ email: values.email, password: values.password })
+         
         }
 
     }
@@ -54,7 +55,7 @@ function Login() {
                     value={formik.values.password} />
                 {formik.touched.password && formik.errors.password ? <p>{formik.errors.password} </p> : null}
                 <Button key="submit" className="button" type="submit">Login</Button>
-                 <Link to='/signup'> Don't have an account?</Link>
+                <Link to='/signup'> Don't have an account?</Link>
 
 
             </form>

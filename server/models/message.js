@@ -22,6 +22,9 @@ const messageSchema = new Schema({
         required: true
 
     },
+    imageUrl: {
+        type: String
+    },
 
 
     convId: {

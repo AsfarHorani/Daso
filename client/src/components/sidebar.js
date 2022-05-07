@@ -1,28 +1,27 @@
 import React, { useState } from 'react';
-import Conversation from './Conversation';
 import Conversations from './conversations';
 import SidebarOption from './sidebarOption';
-import { HomeSharp } from '@material-ui/icons';
 import { PersonSharp } from '@material-ui/icons';
-import { FaceRounded,ExitToApp } from '@material-ui/icons';
+import { FaceRounded, ExitToApp } from '@material-ui/icons';
 
 
 const Sidebar = (props) => {
 
     const [activeIndex, setActiveIndex] = useState(0);
     const sidebarNavItems = [
-        
+
         {
             display: 'Profile',
-            icon: <i className='bx bx-star'></i>,
             to: '/myprofile',
             section: 'Profile',
+            onClick: () => { },
             icon: <PersonSharp className="Sidebar-icon" />
-        },{
-            diplay:'logout',
-            to:'/login',
+        }, {
+            diplay: 'logout',
+            to: '/login',
+            onClick: props.logoutHandler,
             section: 'Logout',
-            icon: <ExitToApp className="Sidebar-icon"/>
+            icon: <ExitToApp className="Sidebar-icon" />
         }
 
     ]
@@ -41,7 +40,7 @@ const Sidebar = (props) => {
                 {
                     sidebarNavItems.map((item, index) => (
 
-                        <SidebarOption item={item} index={index} />
+                        <SidebarOption  key={index} item={item} index={index} />
 
                     ))
                 }

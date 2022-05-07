@@ -1,4 +1,4 @@
-import { PersonSharp } from '@material-ui/icons';
+
 import { ContactsSharp } from '@material-ui/icons';
 import React, { useState } from 'react';
 import ConversationItem from './conversationItem';
@@ -38,8 +38,8 @@ const Conversations = (props) => {
 
   let items = allChats.map((item, index) => (
      
-    <div className='conv-item-container'>
-    <ConversationItem item={item} index={index} />
+    <div key={index} className='conv-item-container'>
+    <ConversationItem  item={item} index={index} />
     </div>
   ))
 
