@@ -1,23 +1,28 @@
 import Sidebar from "../components/sidebar";
-import React, { useState ,useEffect} from 'react';
+import React, { useState ,useEffect, useContext} from 'react';
 import Conversation from '../components/Conversation';
 import { Backdrop } from "@material-ui/core";
 import RightInfoBar from "../components/RightInfoBar";
-import { useNavigate } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
+import { AuthContext } from "../context/AuthContext";
 
 const Home = (props) => {
     const [openSidebar, setOpenSidebar] = useState(false);
     const [openRightbar,setOpenRightbar] = useState(false);
+    const {isAuth,convId} = useContext(AuthContext);
     const navigate = useNavigate()
-    useEffect(()=>{
-        if(!props.isAuth){
-            navigate('/login');
+    useEffect(()=>{   
+        if(!isAuth){
+            navigate("/login");
+        }else{
+            navigate(`/t/${convId}`)
         }
-    },[props.isAuth])
-
-
+    console.log("rendering..")    
+    },[isAuth,convId])
+    
+    
     const toggleSidebar = () => {
-        console.log(openSidebar)
+      
         setOpenSidebar(!openSidebar);
     }
 
@@ -30,11 +35,11 @@ const Home = (props) => {
     return (
         <>
 
-            <Sidebar open={openSidebar}  logoutHandler={props.logoutHandler} />
-            <Conversation toggleSidebar={toggleSidebar}   toggleRightbar={toggleRightbar}  />
+            <Sidebar open={openSidebar}   />
+            <Outlet context={{toggleSidebar, toggleRightbar}}  />
             <Backdrop    className="backdrop"     sx={{ color: '#fff'}}
              open={openSidebar || openRightbar } onClick={()=>{
-            setOpenRightbar(false); 
+             setOpenRightbar(false); 
              setOpenSidebar(false)}} />
             <RightInfoBar  open={openRightbar}  />
         </>

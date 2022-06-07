@@ -10,6 +10,10 @@ html, body, #root, .App {
 
 }
 
+a{
+  text-decoration: none;
+  color: inherit;
+}
 
 .App{
   display: flex;
@@ -162,7 +166,7 @@ p {
   padding: 0 10px 10px 10px;
 }
 
-.conversations-item {
+.conversations-item > .Link {  
   display: flex;
   align-items: center;
 }
@@ -171,7 +175,7 @@ p {
   font-size: 2.5rem !important;
 }
 
-.conversations-item>.convo-display {
+.conversations-item> .Link>.convo-display {
   padding-left: 10px;
 }
 
@@ -276,34 +280,62 @@ p {
 
 
 .cs-footer{
-  background-color: #2F3136;
-  padding: 10px 10px;
-  border-radius: 5PX;
-  height: fit-content;
+
+  display: flex;
+  flex-direction: row;
   position: sticky;
   bottom: 10px;
   margin: 10px;
 }
+.sendButton{
+  position:relative;
+  right: 30px;
+  bottom: 10px;
+
+}
+.sendbtn:hover{
+  cursor: pointer;
+  padding: 5px;
+}
+.sendbtn{
+       
+     font-size: 6rem !important;
+     border-radius: 50%;
+     padding: 10px;
+     background-color: var(--app-pc4);
+}
 
 .ft-content{
+  flex: 1;
+  height: 80%;
+  padding: 10px 10px;
+  border-radius: 5px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-
+  box-sizing: border-box;
+  background-color: #2F3136;
 }
-
-.ft-content > input{
+.ft-content >textarea::-webkit-scrollbar {
+  display: none;
+}
+.ft-content > textarea {
   flex: 1 ;
   font-size: 1.2rem;
   padding: 3px;
   border: none;
   border-radius: 5px;
   background-color: #2F3136;
+  height: auto;
+  max-height: fit-content;
+  resize: none;
+  -ms-overflow-style:none;/* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 }
 
 
 .ft-content > .oth-fet{
-  flex: 0.2;  
+  padding-right: 40px;  
 }
 
 

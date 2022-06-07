@@ -16,12 +16,12 @@ const messageSchema = new Schema({
         required: true
 
     },
-    reciever: {
-        type: Schema.Types.ObjectId,
-        ref: 'User',
-        required: true
+    // reciever: {
+    //     type: Schema.Types.ObjectId,
+    //     ref: 'User',
+    //     required: true
 
-    },
+    // },
     imageUrl: {
         type: String
     },

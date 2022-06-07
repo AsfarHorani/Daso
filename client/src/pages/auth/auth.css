@@ -27,8 +27,16 @@
 .login > form> a,
 .signup > form> a{
      padding: 0 0 0 10px;
+    
+     color: #5865F2;
+     text-decoration: underline;
 }
+.login > form> a:hover,
+.signup > form> a:hover{
+    color: blue;
+    cursor: pointer;
 
+}
 .button{
     background-color: #5865F2 !important;
     margin: 10px 10px 0 10px !important;

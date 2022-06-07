@@ -1,13 +1,19 @@
-import React, { useState } from 'react';
+import React, { useContext, useState,useEffect } from 'react';
 import { useFormik } from "formik";
 import { Button } from '@material-ui/core';
 import * as yup from "yup";
 import './auth.css'
 import { Link, useNavigate } from 'react-router-dom';
+import { AuthContext } from '../../context/AuthContext';
 
 function Login(props) {
 
     const navigate = useNavigate();
+    const { signinHandler,isAuth } = useContext(AuthContext)
+    useEffect(()=>{   console.log("rendering...")
+},[])
+
+
     const formik = useFormik({
         initialValues: {
             email: "",
@@ -18,16 +24,16 @@ function Login(props) {
             email: yup.string().email("Please enter a vaid email").required("Required")
         }),
         onSubmit: (values) => {
-            console.log(formik.errors)
-            props.signinHandler({ email: values.email, password: values.password })
-         
+        
+            signinHandler({ email: values.email, password: values.password })
+
         }
 
     }
 
     )
 
-    console.log(formik.errors)
+    
     return (
         <div className="login" >
             <h2>Login</h2>
@@ -56,7 +62,10 @@ function Login(props) {
                 {formik.touched.password && formik.errors.password ? <p>{formik.errors.password} </p> : null}
                 <Button key="submit" className="button" type="submit">Login</Button>
                 <Link to='/signup'> Don't have an account?</Link>
-
+                <div>
+                    <p class="hint"> <strong>Hint:</strong>  email: asfar@gmail.com</p>
+                    <p> password: asfar123</p>
+                </div>
 
             </form>
         </div>

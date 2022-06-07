@@ -7,12 +7,13 @@ const dotenv = require('dotenv').config();
 const cors = require("cors");
 const userRoutes = require("./routes/user");
 
-
 app.use(express.json());
 app.use(cors());
 app.use(userRoutes);
+app.use('/images', express.static(path.join(__dirname, 'images')));
 app.use((error, req, res, next) => {
   console.log('from error middleware', error);
+  console.log(error.message)
   const status = error.statusCode || 500;
   const message = error.message || "Something went wrong";
   res.status(status).json({
@@ -25,3 +26,4 @@ mongoose.connect(process.env.DB_URL)
     app.listen(8080);
     console.log("connected")
   }).catch(err => console.log(err))
+

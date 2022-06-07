@@ -1,102 +1,94 @@
 
-import {  Image, InfoRounded, MenuSharp} from '@material-ui/icons';
-import React, { useState } from 'react';
+import { Image, InfoRounded, MenuSharp, SendRounded as Send } from '@material-ui/icons';
+import React, { useState, useEffect, useContext } from 'react';
 import Message from './message';
 import ContactInfo from './ContactInfo';
+import axios from 'axios';
+import { useOutletContext, useParams } from 'react-router-dom';
+import { AuthContext } from '../context/AuthContext';
 const Conversation = (props) => {
-    const [msgs, setMsgs] = useState([
+    let { convoId } = useParams();
+    let { token, userInfo,contactInfo} = useContext(AuthContext)
+    const [text, setText] = useState("");
+    
 
-        {
-            from: "1",
-            text: "Hi how are you, loremasidnasidpas pdn sdpasndpsa ndp asndpasndpn aspdn aspnd pas npd nsadpnas pdn naspdinas pdnas pdn aspdnasp ondp asnd pnas pdnas pdnaspdnaspidasp ndp asn dpias dn sp",
-            userId: 1
-        },
-        {
-            from: "2",
-            text: "I am fine what about you?",
-            userId: 2
-        },
-        {
-            from: "1",
-            text: "Hi how are you, loremasidnasidpas pdn sdpasndpsa ndp asndpasndpn aspdn aspnd pas npd nsadpnas pdn naspdinas pdnas pdn aspdnasp ondp asnd pnas pdnas pdnaspdnaspidasp ndp asn dpias dn sp",
-            userId: 1
-        },
-        {
-            from: "2",
-            text: "I am fine what about you?",
-            userId: 2
-        },
-        {
-            from: "1",
-            text: "Hi how are you, loremasidnasidpas pdn sdpasndpsa ndp asndpasndpn aspdn aspnd pas npd nsadpnas pdn naspdinas pdnas pdn aspdnasp ondp asnd pnas pdnas pdnaspdnaspidasp ndp asn dpias dn sp",
-            userId: 1
-        },
-        {
-            from: "2",
-            text: "I am fine what about you?",
-            userId: 2
-        },
-        {
-            from: "1",
-            text: "Hi how are you, loremasidnasidpas pdn sdpasndpsa ndp asndpasndpn aspdn aspnd pas npd nsadpnas pdn naspdinas pdnas pdn aspdnasp ondp asnd pnas pdnas pdnaspdnaspidasp ndp asn dpias dn sp",
-            userId: 1
-        },
-        {
-            from: "2",
-            text: "I am fine what about you?",
-            userId: 2
-        },
-        {
-            from: "1",
-            text: "Hi how are you, loremasidnasidpas pdn sdpasndpsa ndp asndpasndpn aspdn aspnd pas npd nsadpnas pdn naspdinas pdnas pdn aspdnasp ondp asnd pnas pdnas pdnaspdnaspidasp ndp asn dpias dn sp",
-            userId: 1
-        },
-        {
-            from: "2",
-            text: "I am fine what about you?",
-            userId: 2
-        },
-        {
-            from: "1",
-            text: "Hi how are you, loremasidnasidpas pdn sdpasndpsa ndp asndpasndpn aspdn aspnd pas npd nsadpnas pdn naspdinas pdnas pdn aspdnasp ondp asnd pnas pdnas pdnaspdnaspidasp ndp asn dpias dn sp",
-            userId: 1
-        },
-        {
-            from: "2",
-            text: "I am fine what about you?",
-            userId: 2
+    const [msgs, setMsgs] = useState([]);
+    const { toggleSidebar, toggleRightbar } = useOutletContext();
+
+
+    useEffect(() => {
+       console.log("rendering..")
+        async function fetchData() {
+            try {
+                let ms = null
+                if (convoId && token) {
+
+                    ms = await axios.get(`http://localhost:8080/getMessages/${convoId}`, {
+                        headers: {
+                            Authorization: 'Bearer ' + token
+                        }
+                    });
+                }
+              
+                setMsgs(ms.data.messages)
+                var messageBody = document.querySelector('#messageBody');
+                messageBody.scrollTop = messageBody.scrollHeight - messageBody.clientHeight;
+            } catch (err) {
+                console.log(err.response.data)
+            }
         }
+        fetchData()
 
-    ]);
+     
+    }, [convoId, token]);
+
+    async function sendMessage() {
+
+        try {
+            if(text!==""){
+            let msg = await axios.post(`http://localhost:8080/sendMessage/${convoId}`, {
+                text: text,
+                senderId: userInfo.userId
+            }, {
+                headers: {
+                    Authorization: 'Bearer ' + token
+                },
+
+            })
+            
+            setText("");
+            setMsgs(oldMsgs=>[...oldMsgs, msg.data])
+            var messageBody = document.querySelector('#messageBody');
+                messageBody.scrollTop = messageBody.scrollHeight - messageBody.clientHeight;
+        }
+        } catch (err) {
+            console.log(err)
+        }
+    }
 
     let mgsComp = null;
     if (msgs) {
-        mgsComp = msgs.map((msg,index) => {
-            return <Message  key={index} msg={msg} />
+        mgsComp = msgs.map((msg, index) => {
+            return <Message key={index} msg={msg} />
         })
     }
 
     return <div className='conversation-screen'>
         <div className='cs-header'>
             <div className="cs-displayName">
-                <MenuSharp  onClick={props.toggleSidebar}  className="togglebar"/>
-                <h2>Mahnoor</h2>
+                <MenuSharp onClick={toggleSidebar} className="togglebar" />
+                <h2>{contactInfo.name}</h2>
 
             </div>
 
             <div className="right-nav">
-                <InfoRounded onClick={props.toggleRightbar} className="user-info"/>
+                <InfoRounded onClick={toggleRightbar} className="user-info" />
             </div>
         </div>
 
-        <div className="cs-body">
-            {/* <div className='contact-info'>
-                <AccountCircleSharp className="contact-icon" />
-                <h4>Mahnoor Khan </h4>
-                <p>Your friend since 24 december 2021</p>
+        <div id="messageBody" className="cs-body">
 
-            </div> */}
-            <ContactInfo/>
+            <ContactInfo />
 
             <div className='messages'>
                 {mgsComp}
@@ -106,12 +98,17 @@ const Conversation = (props) => {
 
         <div className='cs-footer'>
             <div className="ft-content">
-                <input placeholder='Write your message..' type="text" />
-                <div className='othe-fet'>
+                <textarea  value={text} onChange={e => setText(e.target.value)} placeholder='Write your message..' type="text" />
+                <div className='oth-fet'>
                     <Image />
                 </div>
+
             </div>
-        </div>  
+
+            <div className='sendButton'>
+                <Send className="sendbtn" onClick={()=>sendMessage()} />
+            </div>
+        </div>
     </div>
 }
 

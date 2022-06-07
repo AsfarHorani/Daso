@@ -7,9 +7,8 @@ const jwt = require("jsonwebtoken");
 
 exports.signup = (req, res, next) => {
     const errors = validationResult(req);
-    console.log(req.body)
     if (!errors.isEmpty()) {
-        const error = new Error('Validation failed.');
+        const error = new Error(errors.array()[0].msg||'Validation failed.');
         error.statusCode = 422;
         error.data = errors.array();
         throw error;
@@ -56,7 +55,8 @@ exports.login = (req, res, next) => {
     const errors = validationResult(req);
     console.log(req.body)
     if (!errors.isEmpty()) {
-        const error = new Error('Validation failed.');
+        
+        const error = new Error(errors.array()[0]||'Validation failed.');
         error.statusCode = 422;
         error.data = errors.array();
         throw error;

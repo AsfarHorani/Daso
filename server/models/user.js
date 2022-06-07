@@ -28,7 +28,11 @@ const userSchema = new Schema({
     status:{
         type: String,
         default:""
-    }
+    },
+    contacts: [{
+        type:
+        mongoose.Schema.Types.ObjectId, 
+        ref: 'Conversation'}]
 
 })
 

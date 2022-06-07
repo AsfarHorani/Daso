@@ -1,12 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState , useContext,useEffect} from 'react';
 import { useFormik } from "formik";
 import { Button } from '@material-ui/core';
 import * as yup from "yup";
 import './auth.css'
 import { Link, useNavigate } from 'react-router-dom';
+import { AuthContext } from '../../context/AuthContext';
 function Signup(props) {
+    useEffect(()=>{   console.log("rendering...")
+},[])
 
-    console.log(props)
+    const {signupHandler} = useContext(AuthContext);
+
     const [image, setImage] = useState(null);
     const navigate = useNavigate();
     const formik = useFormik({
@@ -24,7 +28,7 @@ function Signup(props) {
             email: yup.string().email("Please enter a vaid email").required("Required")
         }),
         onSubmit: (values) => {
-            console.log(formik.errors)
+       
             const body = {
                 name: values.name,
                 email: values.email,
@@ -33,7 +37,7 @@ function Signup(props) {
                 image: image
             }
        
-            props.signupHandler(body);
+          signupHandler(body);
       
         }
 
@@ -41,7 +45,7 @@ function Signup(props) {
 
     )
 
-    console.log(formik.errors)
+    
     return (
         <div className="signup" >
             <h2>Sign up</h2>
@@ -98,7 +102,7 @@ function Signup(props) {
                     value={formik.values.password} />
                 {formik.touched.password && formik.errors.password ? <p>{formik.errors.password} </p> : null}
                 <Button key="submit" className="button" type="submit">Signup</Button>
-                <Link to='/login'> Don't have an account?</Link>
+                <Link to='/login'> Already have an accoun? Sign in here</Link>
 
 
             </form>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import Conversations from './conversations';
 import SidebarOption from './sidebarOption';
 import { PersonSharp } from '@material-ui/icons';
@@ -6,7 +6,7 @@ import { FaceRounded, ExitToApp } from '@material-ui/icons';
 
 
 const Sidebar = (props) => {
-
+    
     const [activeIndex, setActiveIndex] = useState(0);
     const sidebarNavItems = [
 
@@ -25,7 +25,10 @@ const Sidebar = (props) => {
         }
 
     ]
-
+    useEffect(()=>{
+        console.log("rendering app..")
+    },[])
+    
 
     return (
         <div className={props.open ? "Sidebar active" : "Sidebar"}>
