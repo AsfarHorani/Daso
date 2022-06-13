@@ -1,14 +1,15 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState,useEffect, useContext } from 'react';
 import Conversations from './conversations';
 import SidebarOption from './sidebarOption';
 import { PersonSharp } from '@material-ui/icons';
 import { FaceRounded, ExitToApp } from '@material-ui/icons';
-
+import { AuthContext } from '../context/AuthContext';
 
 const Sidebar = (props) => {
     
     const [activeIndex, setActiveIndex] = useState(0);
-    const sidebarNavItems = [
+    const {logoutHandler} = useContext(AuthContext);
+        const sidebarNavItems = [
 
         {
             display: 'Profile',
@@ -19,7 +20,7 @@ const Sidebar = (props) => {
         }, {
             diplay: 'logout',
             to: '/login',
-            onClick: props.logoutHandler,
+            onClick: logoutHandler,
             section: 'Logout',
             icon: <ExitToApp className="Sidebar-icon" />
         }

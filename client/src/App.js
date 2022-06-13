@@ -7,6 +7,7 @@ import Signup from './pages/auth/signup';
 import Login from './pages/auth/login';
 import Conversation from './components/Conversation';
 import { AuthContext } from './context/AuthContext';
+import openSocket from 'socket.io-client';
 
 function App() {
 
@@ -17,6 +18,8 @@ function App() {
     const navigate = useNavigate();
 
     useEffect(() => {
+  
+
       isAuth ? navigate("/t") : navigate("/login")
       console.log("rendering")
     }, [isAuth])

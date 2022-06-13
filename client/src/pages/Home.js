@@ -11,11 +11,17 @@ const Home = (props) => {
     const [openRightbar,setOpenRightbar] = useState(false);
     const {isAuth,convId} = useContext(AuthContext);
     const navigate = useNavigate()
+    console.log(convId)
     useEffect(()=>{   
         if(!isAuth){
             navigate("/login");
         }else{
-            navigate(`/t/${convId}`)
+            if(convId){   
+            navigate(`/t/${convId.convoId}`)
+            }else{
+                navigate(`/t/null`)
+
+            }
         }
     console.log("rendering..")    
     },[isAuth,convId])

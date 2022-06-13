@@ -6,61 +6,81 @@ import ContactInfo from './ContactInfo';
 import axios from 'axios';
 import { useOutletContext, useParams } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
+import openSocket from 'socket.io-client';
 const Conversation = (props) => {
     let { convoId } = useParams();
-    let { token, userInfo,contactInfo} = useContext(AuthContext)
+    let { token, userInfo, setContactInfo, contactInfo } = useContext(AuthContext)
     const [text, setText] = useState("");
-    
-
     const [msgs, setMsgs] = useState([]);
     const { toggleSidebar, toggleRightbar } = useOutletContext();
 
 
     useEffect(() => {
-       console.log("rendering..")
+        console.log("rendering..")
         async function fetchData() {
+
+    
+
             try {
+                 
+                
+
                 let ms = null
-                if (convoId && token) {
+                if (convoId!==null && token!==null) {
 
                     ms = await axios.get(`http://localhost:8080/getMessages/${convoId}`, {
                         headers: {
                             Authorization: 'Bearer ' + token
                         }
                     });
+                    setMsgs(ms.data.messages)
                 }
-              
-                setMsgs(ms.data.messages)
-                var messageBody = document.querySelector('#messageBody');
-                messageBody.scrollTop = messageBody.scrollHeight - messageBody.clientHeight;
+               
+               
+               
+           
             } catch (err) {
                 console.log(err.response.data)
             }
+
         }
         fetchData()
+        var messageBody = document.querySelector('#messageBody');
+        messageBody.scrollTop = messageBody.scrollHeight - messageBody.clientHeight;
 
-     
     }, [convoId, token]);
+
+
+    useEffect(()=>{
+        const socket = openSocket('http://localhost:8080');
+        socket.on('message', data => {
+            if (data.action === 'send') {
+                console.log("msg recieved")
+                setMsgs(oldMsgs => [...oldMsgs, data.message])
+                var messageBody = document.querySelector('#messageBody');
+                messageBody.scrollTop = messageBody.scrollHeight - messageBody.clientHeight;
+        
+            }
+        })
+    },[])
 
     async function sendMessage() {
 
         try {
-            if(text!==""){
-            let msg = await axios.post(`http://localhost:8080/sendMessage/${convoId}`, {
-                text: text,
-                senderId: userInfo.userId
-            }, {
-                headers: {
-                    Authorization: 'Bearer ' + token
-                },
+            if (text !== "") {
+                let msg = await axios.post(`http://localhost:8080/sendMessage/${convoId}`, {
+                    text: text,
+                    senderId: userInfo.userId
+                }, {
+                    headers: {
+                        Authorization: 'Bearer ' + token
+                    },
 
-            })
-            
-            setText("");
-            setMsgs(oldMsgs=>[...oldMsgs, msg.data])
-            var messageBody = document.querySelector('#messageBody');
-                messageBody.scrollTop = messageBody.scrollHeight - messageBody.clientHeight;
-        }
+                })
+
+                setText("");
+                
+             }
         } catch (err) {
             console.log(err)
         }
@@ -98,7 +118,7 @@ const Conversation = (props) => {
 
         <div className='cs-footer'>
             <div className="ft-content">
-                <textarea  value={text} onChange={e => setText(e.target.value)} placeholder='Write your message..' type="text" />
+                <textarea value={text} onChange={e => setText(e.target.value)} placeholder='Write your message..' type="text" />
                 <div className='oth-fet'>
                     <Image />
                 </div>
@@ -106,7 +126,7 @@ const Conversation = (props) => {
             </div>
 
             <div className='sendButton'>
-                <Send className="sendbtn" onClick={()=>sendMessage()} />
+                <Send className="sendbtn" onClick={() => sendMessage()} />
             </div>
         </div>
     </div>

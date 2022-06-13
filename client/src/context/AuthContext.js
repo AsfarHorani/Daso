@@ -3,10 +3,6 @@ import axios from 'axios';
 import { useNavigate } from "react-router-dom";
 
 
-
-
-
-
 export const AuthContext = createContext();
 
 export const AuthContextProvider = ({ children }) => {
@@ -16,7 +12,10 @@ export const AuthContextProvider = ({ children }) => {
   const [isAuth, setAuth] = useState(false);
   const [loading, setLoading] = useState(false);
   const [contactInfo, setContactInfo] = useState({});
-  const [convId, setConvId] =useState(null);
+  const [convId, setConvId] =useState({
+    convoId: null,
+    contactId: null
+  });
   const navigate = useNavigate();
   
   
@@ -148,6 +147,7 @@ export const AuthContextProvider = ({ children }) => {
           setAuth,
           signinHandler,
           signupHandler,
+          logoutHandler,
           token,
           setToken,
           userInfo,

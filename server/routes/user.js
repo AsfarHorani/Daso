@@ -15,7 +15,6 @@ router.post('/signup', upload.single('image'), [
         .normalizeEmail().custom(async value => {
             const user = await User.findOne({ email: value });
             if (user) {
-                console.log(18 + "route", user);
                 return Promise.reject('Email already in use');
             }
         }),
@@ -54,7 +53,6 @@ router.post("/sendMessage/:convId", isAuth,
 router.get("/getMessages/:convId", isAuth, messageRoutes.getMessages);
 
 router.post("/sendImages", upload.array('images', 3), (req, res, next) => {
-    console.log(req.files);
     res.json({
         msg: "sucess"
     })
@@ -62,6 +60,6 @@ router.post("/sendImages", upload.array('images', 3), (req, res, next) => {
 router.get('/find-conversations/:query',userRouters.searchUsers);
 
 router.get('/get-conversation/:userId', convoRoutes.getConversations);
-
+router.get('/get-user/:userId', userRouters.getUser)
 
 module.exports = router;

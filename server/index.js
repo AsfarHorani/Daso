@@ -12,8 +12,7 @@ app.use(cors());
 app.use(userRoutes);
 app.use('/images', express.static(path.join(__dirname, 'images')));
 app.use((error, req, res, next) => {
-  console.log('from error middleware', error);
-  console.log(error.message)
+  
   const status = error.statusCode || 500;
   const message = error.message || "Something went wrong";
   res.status(status).json({
@@ -23,7 +22,10 @@ app.use((error, req, res, next) => {
 
 mongoose.connect(process.env.DB_URL)
   .then(result => {
-    app.listen(8080);
+   const server = app.listen(8080);
+    const io= require("./socket").init(server);
+    io.on('connection',socket=>{
+    console.log("client connected")
+    }); 
     console.log("connected")
   }).catch(err => console.log(err))
-

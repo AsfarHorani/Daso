@@ -8,7 +8,7 @@ const jwt = require("jsonwebtoken");
 exports.signup = (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        const error = new Error(errors.array()[0].msg||'Validation failed.');
+        const error = new Error(errors.array()[0].msg || 'Validation failed.');
         error.statusCode = 422;
         error.data = errors.array();
         throw error;
@@ -23,8 +23,7 @@ exports.signup = (req, res, next) => {
     const email = req.body.email;
     const username = req.body.username;
 
-    console.log(req.file);
-    console.log(req.body)
+
     bcrypt.hash(password, 12)
         .then(hashedPassword => {
             const user = new User({
@@ -36,7 +35,7 @@ exports.signup = (req, res, next) => {
             })
             return user.save()
         }).then(result => {
-            console.log(result)
+
             res.status(200).json({
                 message: 'Sign up successful',
                 user: result
@@ -53,24 +52,23 @@ exports.signup = (req, res, next) => {
 }
 exports.login = (req, res, next) => {
     const errors = validationResult(req);
-    console.log(req.body)
+
     if (!errors.isEmpty()) {
-        
-        const error = new Error(errors.array()[0]||'Validation failed.');
+
+        const error = new Error(errors.array()[0] || 'Validation failed.');
         error.statusCode = 422;
         error.data = errors.array();
         throw error;
     }
-    console.log(req.body.email, req.body.password)
+
     const email = req.body.email;
     const password = req.body.password;
     let loadedUser;
-    console.log(email, password)
     User.findOne({ email: email })
         .then(user => {
 
             if (!user) {
-                console.log("user doesnt exist")
+
                 const error = new Error("User doesn't exist");
                 error.statusCode = 401;
                 throw error;
@@ -82,24 +80,20 @@ exports.login = (req, res, next) => {
         })
         .then(doMatch => {
             if (!doMatch) {
-                console.log('incorrect password')
                 const error = new Error("Password is incorrect");
                 error.statusCode = 403;
                 throw error;
             }
-            console.log(loadedUser)
             const token = jwt.sign({
                 email: loadedUser.email,
                 userId: loadedUser._id.toString()
             }, 'secret', { expiresIn: '1h' })
 
-            console.log(loadedUser)
             res.status(200).json({
                 token: token,
                 userInfo: loadedUser,
                 message: "Login succesfull"
             })
-            console.log('login success')
         })
 
         .catch(err => {
@@ -115,13 +109,32 @@ exports.login = (req, res, next) => {
 
 exports.searchUsers = (req, res, next) => {
     const kw = req.params.query;
-    console.log(kw)
-    
+
     User.find({ name: { $regex: '.*' + kw + '.*' } }).then(result => {
         res.status(200).json({
             result: result
         })
     }).catch(err => {
-        console.log(err)
+        if (!err.statusCode) {
+            err.statusCode = 500;
+        }
+        next(err);
     })
+}
+
+
+exports.getUser = (req, res, next) => {
+    const userId = req.params.userId;
+
+    User.findById(userId)
+        .then(result => {
+            res.status(200).json({
+                result: result
+            })
+        }).catch(err => {
+            if (!err.statusCode) {
+                err.statusCode = 500;
+            }
+            next(err);
+        })
 }

@@ -24,7 +24,7 @@ exports.createConvo = async (req, res, next) => {
                 })
             })
         )
-        console.log(upConv)
+
         res.status(200).json({
             converstaion: conv,
             message: "created conversation!"
@@ -49,18 +49,18 @@ exports.getConversations = async (req, res, next) => {
             })
         )
 
-        console.log(52,user,"getCOnvo",convs)
+    
         const contacts = await Promise.all(
             convs.map(async e => {  
               
                 if (e.user1!=userId) {
                     let c = await User.findById(e.user1)
-                    console.log(e)
                     let data ={
                         convoId: e._id,
                         _id: c._id,
                         imageUrl : c.imageUrl,
-                        name:c.name
+                        name:c.name,
+                        contactId: e.user1
                     }
                     return data
                 }
