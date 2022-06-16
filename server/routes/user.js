@@ -47,7 +47,7 @@ router.post('/createConversation',  [
 ], convoRoutes.createConvo)
 
 
-router.post("/sendMessage/:convId", isAuth,
+router.post("/sendMessage/:convId", upload.single('image'), isAuth,
  [body('text', "Message cannot be empty").not().isEmpty()], messageRoutes.sendMessage);
 
 router.get("/getMessages/:convId", isAuth, messageRoutes.getMessages);

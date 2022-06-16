@@ -14,6 +14,7 @@ exports.signup = (req, res, next) => {
         throw error;
     }
     let pfp = null;
+
     if (req.file) {
         pfp = req.file.path;
     }
@@ -78,7 +79,7 @@ exports.login = (req, res, next) => {
 
             return bcrypt.compare(password, user.password)
         })
-        .then(doMatch => {
+        .then(doMatch => {  
             if (!doMatch) {
                 const error = new Error("Password is incorrect");
                 error.statusCode = 403;

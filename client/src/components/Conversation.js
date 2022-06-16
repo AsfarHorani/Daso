@@ -1,6 +1,6 @@
 
 import { Image, InfoRounded, MenuSharp, SendRounded as Send } from '@material-ui/icons';
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useRef } from 'react';
 import Message from './message';
 import ContactInfo from './ContactInfo';
 import axios from 'axios';
@@ -13,20 +13,20 @@ const Conversation = (props) => {
     const [text, setText] = useState("");
     const [msgs, setMsgs] = useState([]);
     const { toggleSidebar, toggleRightbar } = useOutletContext();
-
+    const [image, setImage] = useState(null);
 
     useEffect(() => {
         console.log("rendering..")
         async function fetchData() {
 
-    
+
 
             try {
-                 
-                
+
+
 
                 let ms = null
-                if (convoId!==null && token!==null) {
+                if (convoId !== null && token !== null) {
 
                     ms = await axios.get(`http://localhost:8080/getMessages/${convoId}`, {
                         headers: {
@@ -34,24 +34,29 @@ const Conversation = (props) => {
                         }
                     });
                     setMsgs(ms.data.messages)
+                      var messageBody = document.querySelector('#messageBody');
+                messageBody.scrollTop = messageBody.scrollHeight - messageBody.clientHeight;
+
                 }
-               
-               
-               
-           
+
+              
+
             } catch (err) {
                 console.log(err.response.data)
+            } finally{
+                var messageBody = document.querySelector('#messageBody');
+                messageBody.scrollTop = messageBody.scrollHeight - messageBody.clientHeight;
+
             }
 
         }
         fetchData()
-        var messageBody = document.querySelector('#messageBody');
-        messageBody.scrollTop = messageBody.scrollHeight - messageBody.clientHeight;
+
 
     }, [convoId, token]);
 
 
-    useEffect(()=>{
+    useEffect(() => {
         const socket = openSocket('http://localhost:8080');
         socket.on('message', data => {
             if (data.action === 'send') {
@@ -59,19 +64,22 @@ const Conversation = (props) => {
                 setMsgs(oldMsgs => [...oldMsgs, data.message])
                 var messageBody = document.querySelector('#messageBody');
                 messageBody.scrollTop = messageBody.scrollHeight - messageBody.clientHeight;
-        
+
             }
         })
-    },[])
+    }, [])
 
     async function sendMessage() {
-
+        console.log(image,text,userInfo.userId)
+        let formData = new FormData();
+        formData.append('text',text);
+         formData.append('image',image);
+         formData.append('senderId',userInfo.userId);
+         console.log(formData)
+       
         try {
-            if (text !== "") {
-                let msg = await axios.post(`http://localhost:8080/sendMessage/${convoId}`, {
-                    text: text,
-                    senderId: userInfo.userId
-                }, {
+            if (text !== "" || image) {
+                let msg = await axios.post(`http://localhost:8080/sendMessage/${convoId}`, formData, {
                     headers: {
                         Authorization: 'Bearer ' + token
                     },
@@ -79,8 +87,8 @@ const Conversation = (props) => {
                 })
 
                 setText("");
-                
-             }
+
+            }
         } catch (err) {
             console.log(err)
         }
@@ -92,6 +100,12 @@ const Conversation = (props) => {
             return <Message key={index} msg={msg} />
         })
     }
+
+
+    function openDialog() {
+        document.getElementById('input-file').click();
+    }
+
 
     return <div className='conversation-screen'>
         <div className='cs-header'>
@@ -120,7 +134,12 @@ const Conversation = (props) => {
             <div className="ft-content">
                 <textarea value={text} onChange={e => setText(e.target.value)} placeholder='Write your message..' type="text" />
                 <div className='oth-fet'>
-                    <Image />
+                    <Image aria-label="upload picture" onClick={openDialog} />
+                    <input id="input-file"
+                        onChange={e => setImage(e.target.files[0])}
+                        type="file"
+                        name="image" style={{ display: 'none' }} />
+
                 </div>
 
             </div>

@@ -16,14 +16,21 @@ exports.sendMessage = async (req, res, next) => {
         }
         const text = req.body.text;
         const sender = req.body.senderId;
-        //const reciever = req.body.recieverId;
         const convId = req.params.convId;
+        let imageUrl =null
+        console.log(22,req.body)
+
+        if(req.file){
+            imageUrl = req.file.path
+        }else{
+            imageUrl = null;
+        }
 
         const message = new Message({
             text: text,
             sender: sender,
-            // reciever: reciever,
-            convId: convId
+            convId: convId,
+            imageUrl:imageUrl
         });
 
 
@@ -41,6 +48,25 @@ exports.sendMessage = async (req, res, next) => {
 
 }
 
+exports.sendImage = async (req, res, next) => {
+     
+     const file =null
+     if(!file){
+        return;
+     }
+     console.log(file)
+     file = req.file.path;
+     
+    try {
+          
+     } catch (err) {
+        if (!err.statusCode) {
+            err.statusCode = 500
+        }
+        next(err)
+    }
+
+}
 
 
 exports.getMessages = (req, res, next) => {

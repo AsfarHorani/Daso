@@ -9,12 +9,14 @@ import axios from 'axios';
 function ConversationItem({ item, index }) {
     let { contactInfo, setContactInfo, userInfo } = useContext(AuthContext)
     let navigate = useNavigate();
-
+     
+    
 
     const clickHandler = () => {
         setContactInfo(item)
+        console.log(item)
         if (item.convoId) {
-            console.log(item)
+            
             navigate(`/t/${item.convoId}`);
             return
         }
@@ -23,8 +25,10 @@ function ConversationItem({ item, index }) {
             user1: userInfo.userId,
             user2: item._id
         }).then(data => {
-
+            console.log(data.data.converstaion)
             navigate(`/t/${data.data.converstaion._id}`);
+        
+        
         }).catch(err => {
             console.log(err)
         })

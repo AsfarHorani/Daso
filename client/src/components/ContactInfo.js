@@ -6,13 +6,13 @@ import { Avatar } from '@material-ui/core';
 
 function ContactInfo() {
      const {contactInfo,convId,userInfo,setContactInfo} = useContext(AuthContext)
-      
+       
      useEffect(()=>{
          console.log("rendering...")
          async function  fetchData (){
          try{
          if(!contactInfo.name){
-           let user = await axios.get(`http://localhost:8080/get-user/${convId.contactId}`);
+           let user = await axios.get(`http://localhost:8080/get-user/${convId.userId}`);
            setContactInfo(user.data.result)
          }
         }catch(err){

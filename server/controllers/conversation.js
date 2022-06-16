@@ -4,12 +4,28 @@ const User = require('../models/user');
 exports.createConvo = async (req, res, next) => {
     const user1 = req.body.user1;
     const user2 = req.body.user2;
-    const convo = new conversation({
-        user1: user1,
-        user2: user2
-    })
+
+
+
     try {
-        const conv = await convo.save();
+        let conv = await conversation.find({
+            $or: [
+                { $and: [{ user1: user1 }, { user2: user2 }] },
+                { $and: [{ user2: user1 }, { user1: user2 }] }
+            ]
+        })
+        
+        if(conv){
+            conv=conv[0]
+        }
+
+        if (!conv) {
+            const convo = new conversation({
+                user1: user1,
+                user2: user2
+            })
+            conv = await convo.save();
+        }
         const arr = [user1, user2];
         const upConv = await Promise.all(
             arr.map(async id => {
@@ -24,11 +40,13 @@ exports.createConvo = async (req, res, next) => {
                 })
             })
         )
+        console.log(conv)
 
         res.status(200).json({
             converstaion: conv,
             message: "created conversation!"
         })
+        return
     }
 
     catch (err) {
@@ -49,28 +67,28 @@ exports.getConversations = async (req, res, next) => {
             })
         )
 
-    
+
         const contacts = await Promise.all(
-            convs.map(async e => {  
-              
-                if (e.user1!=userId) {
+            convs.map(async e => {
+
+                if (e.user1 != userId) {
                     let c = await User.findById(e.user1)
-                    let data ={
+                    let data = {
                         convoId: e._id,
                         _id: c._id,
-                        imageUrl : c.imageUrl,
-                        name:c.name,
+                        imageUrl: c.imageUrl,
+                        name: c.name,
                         contactId: e.user1
                     }
                     return data
                 }
                 else {
                     let c = await User.findById(e.user2)
-                    let data ={
+                    let data = {
                         convoId: e._id,
                         userId: c._id,
-                        imageUrl : c.imageUrl,
-                        name:c.name
+                        imageUrl: c.imageUrl,
+                        name: c.name
                     }
                     return data
                 }

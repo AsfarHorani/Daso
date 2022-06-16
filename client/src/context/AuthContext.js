@@ -62,6 +62,7 @@ export const AuthContextProvider = ({ children }) => {
     formData.append('username', data.username)
     formData.append('password', data.password)
     formData.append('image', data.image)
+    
     axios.post('http://localhost:8080/signup', formData)
       .then((response) => {
         navigate("/login");

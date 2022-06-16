@@ -28,7 +28,7 @@ function Signup(props) {
             email: yup.string().email("Please enter a vaid email").required("Required")
         }),
         onSubmit: (values) => {
-       
+           console.log(image)
             const body = {
                 name: values.name,
                 email: values.email,
