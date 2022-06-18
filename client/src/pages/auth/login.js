@@ -1,6 +1,6 @@
-import React, { useContext, useState,useEffect } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { useFormik } from "formik";
-import { Button } from '@material-ui/core';
+import { Button, CircularProgress } from '@material-ui/core';
 import * as yup from "yup";
 import './auth.css'
 import { Link, useNavigate } from 'react-router-dom';
@@ -9,9 +9,10 @@ import { AuthContext } from '../../context/AuthContext';
 function Login(props) {
 
     const navigate = useNavigate();
-    const { signinHandler,isAuth } = useContext(AuthContext)
-    useEffect(()=>{   console.log("rendering...")
-},[])
+    const { signinHandler, isAuth, loading, authError } = useContext(AuthContext)
+    useEffect(() => {
+        console.log("rendering...")
+    }, [])
 
 
     const formik = useFormik({
@@ -24,7 +25,7 @@ function Login(props) {
             email: yup.string().email("Please enter a vaid email").required("Required")
         }),
         onSubmit: (values) => {
-        
+
             signinHandler({ email: values.email, password: values.password })
 
         }
@@ -33,11 +34,13 @@ function Login(props) {
 
     )
 
-    
+
     return (
         <div className="login" >
             <h2>Login</h2>
             <form onSubmit={formik.handleSubmit} >
+                {authError && <lable className="authError">*{authError}</lable>}
+
                 <input
                     key="email"
                     id="email"
@@ -60,7 +63,7 @@ function Login(props) {
                     onChange={formik.handleChange}
                     value={formik.values.password} />
                 {formik.touched.password && formik.errors.password ? <p>{formik.errors.password} </p> : null}
-                <Button key="submit" className="button" type="submit">Login</Button>
+                <div className='subCont'><Button key="submit" className="button" type="submit">Login</Button>{loading && < CircularProgress className="progbar" />}</div>
                 <Link to='/signup'> Don't have an account?</Link>
                 <div>
                     <p class="hint"> <strong>Hint:</strong>  email: asfar@gmail.com</p>

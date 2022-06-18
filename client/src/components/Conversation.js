@@ -14,7 +14,7 @@ const Conversation = (props) => {
     const [msgs, setMsgs] = useState([]);
     const { toggleSidebar, toggleRightbar } = useOutletContext();
     const [image, setImage] = useState(null);
-
+    const  [imageUrl,setImageUrl] = useState(null);
     useEffect(() => {
         console.log("rendering..")
         async function fetchData() {
@@ -34,16 +34,16 @@ const Conversation = (props) => {
                         }
                     });
                     setMsgs(ms.data.messages)
-                      var messageBody = document.querySelector('#messageBody');
-                messageBody.scrollTop = messageBody.scrollHeight - messageBody.clientHeight;
+                    var messageBody = document.querySelector('#messageBody');
+                    messageBody.scrollTop = messageBody.scrollHeight - messageBody.clientHeight;
 
                 }
 
-              
+
 
             } catch (err) {
                 console.log(err.response.data)
-            } finally{
+            } finally {
                 var messageBody = document.querySelector('#messageBody');
                 messageBody.scrollTop = messageBody.scrollHeight - messageBody.clientHeight;
 
@@ -69,14 +69,26 @@ const Conversation = (props) => {
         })
     }, [])
 
+useEffect(()=>{
+
+    if(!image){
+        setImageUrl(null)
+        return
+    }
+    const url =URL.createObjectURL(image)
+    console.log(url )
+    setImageUrl(url);
+},[image])
+
+
     async function sendMessage() {
-        console.log(image,text,userInfo.userId)
+        console.log(image, text, userInfo.userId)
         let formData = new FormData();
-        formData.append('text',text);
-         formData.append('image',image);
-         formData.append('senderId',userInfo.userId);
-         console.log(formData)
-       
+        formData.append('text', text);
+        formData.append('image', image);
+        formData.append('senderId', userInfo.userId);
+        console.log(formData)
+
         try {
             if (text !== "" || image) {
                 let msg = await axios.post(`http://localhost:8080/sendMessage/${convoId}`, formData, {
@@ -87,6 +99,8 @@ const Conversation = (props) => {
                 })
 
                 setText("");
+                setImage(null)
+                setImageUrl(null)
 
             }
         } catch (err) {
@@ -132,11 +146,11 @@ const Conversation = (props) => {
 
         <div className='cs-footer'>
             <div className="ft-content">
-                <textarea value={text} onChange={e => setText(e.target.value)} placeholder='Write your message..' type="text" />
+                <textarea onKeyPress={(e) => e.key === 'Enter' ? sendMessage() : console.log(false)} id="myInput" value={text} onChange={e => setText(e.target.value)} placeholder='Write your message..' type="text" />
                 <div className='oth-fet'>
-                    <Image aria-label="upload picture" onClick={openDialog} />
+                    {image?<img className='prevImage' src={imageUrl} /> : <Image aria-label="upload picture" onClick={openDialog} /> }
                     <input id="input-file"
-                        onChange={e => setImage(e.target.files[0])}
+                        onChange={(e) =>  { setImage(e.target.files[0]); }}
                         type="file"
                         name="image" style={{ display: 'none' }} />
 
@@ -145,7 +159,7 @@ const Conversation = (props) => {
             </div>
 
             <div className='sendButton'>
-                <Send className="sendbtn" onClick={() => sendMessage()} />
+                <Send id="myBtn" className="sendbtn" onClick={() => sendMessage()} />
             </div>
         </div>
     </div>

@@ -1,15 +1,21 @@
-import React, { useState , useContext,useEffect} from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { useFormik } from "formik";
-import { Button } from '@material-ui/core';
+import { Button, CircularProgress } from '@material-ui/core';
 import * as yup from "yup";
 import './auth.css'
 import { Link, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
-function Signup(props) {
-    useEffect(()=>{   console.log("rendering...")
-},[])
 
-    const {signupHandler} = useContext(AuthContext);
+
+
+function Signup(props) {
+
+
+    useEffect(() => {
+        console.log("rendering...")
+    }, [])
+
+    const { signupHandler, authError,loading } = useContext(AuthContext);
 
     const [image, setImage] = useState(null);
     const navigate = useNavigate();
@@ -22,13 +28,13 @@ function Signup(props) {
 
         },
         validationSchema: yup.object({
-            name: yup.string().max(15, "Must be 15 charaters or less").min(3,"Name must have atleast 3 characters").required("Required"),
+            name: yup.string().max(15, "Must be 15 charaters or less").min(3, "Name must have atleast 3 characters").required("Required"),
             username: yup.string().max(10, "Username must be between 10 and 5 characters").min(5, "Username must be between 10 and 5 characters").required("Required"),
             password: yup.string().required('No password provided.').min(8, 'Password is too short - should be 8 chars minimum.').matches(/[a-zA-Z]/, 'Password can only contain Latin letters.'),
             email: yup.string().email("Please enter a vaid email").required("Required")
         }),
         onSubmit: (values) => {
-           console.log(image)
+            console.log(image)
             const body = {
                 name: values.name,
                 email: values.email,
@@ -36,16 +42,18 @@ function Signup(props) {
                 password: values.password,
                 image: image
             }
-       
-          signupHandler(body);
-      
+          
+            console.log("loading")
+            signupHandler(body);
+          
+
         }
 
     }
 
     )
 
-    
+
     return (
         <div className="signup" >
             <h2>Sign up</h2>
@@ -101,7 +109,8 @@ function Signup(props) {
                     onChange={formik.handleChange}
                     value={formik.values.password} />
                 {formik.touched.password && formik.errors.password ? <p>{formik.errors.password} </p> : null}
-                <Button key="submit" className="button" type="submit">Signup</Button>
+                {authError && <lable className="authError">*{authError}</lable>}
+                <div class="subCont"><Button key="submit" className="button" type="submit">Signup</Button>{loading && < CircularProgress className="progbar"  /> }</div> 
                 <Link to='/login'> Already have an accoun? Sign in here</Link>
 
 

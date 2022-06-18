@@ -42,3 +42,15 @@
     margin: 10px 10px 0 10px !important;
     width: 50% !important;
 }
+
+.authError{
+    color: red;
+}
+.subCont{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.subCont > .progbar{
+    margin: auto !important;
+}

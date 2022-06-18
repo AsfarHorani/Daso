@@ -34,7 +34,6 @@ function App() {
         <Route path='/t' element={<Home />} >
           <Route path='/t/:convoId' element={<Conversation />} />
         </Route>
-        <Route path='/myprofile' element={<h2>Under Construction</h2>} />
         <Route exact path="/signup" element={<Signup />} />
         <Route exact path="/login" element={<Login />} />
       </Routes>

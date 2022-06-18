@@ -283,9 +283,12 @@ p {
 .msg-img{
   margin-bottom: 20px;
   max-width: 100%;
+} 
+
+.prevImage{
+  max-width: 100px;
+  max-height: 100%;
 }
-
-
 .cs-footer{
 
   display: flex;

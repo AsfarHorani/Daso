@@ -12,7 +12,9 @@ export const AuthContextProvider = ({ children }) => {
   const [isAuth, setAuth] = useState(false);
   const [loading, setLoading] = useState(false);
   const [contactInfo, setContactInfo] = useState({});
-  const [convId, setConvId] =useState({
+  const [authError, setAuthError]  = useState(null)
+
+   const [convId, setConvId] =useState({
     convoId: null,
     contactId: null
   });
@@ -62,18 +64,22 @@ export const AuthContextProvider = ({ children }) => {
     formData.append('username', data.username)
     formData.append('password', data.password)
     formData.append('image', data.image)
-    
+     setLoading(true)
     axios.post('http://localhost:8080/signup', formData)
       .then((response) => {
+        
         navigate("/login");
+        setLoading(false)
       }).catch(err => {
-        console.log(err);
+        console.log(err.response.data);
+        setAuthError(err.response.data.message);
+        setLoading(false)
       })
   }
 
   const signinHandler = (data) => {
 
-
+    setLoading(true)
     axios.post('http://localhost:8080/login', data,
       {
         headers: {
@@ -81,7 +87,7 @@ export const AuthContextProvider = ({ children }) => {
         }
       })
       .then((res) => {
-      
+        setLoading(false)
         res = res.data 
         console.log(res.userInfo) 
         const _userInfo = {
@@ -114,7 +120,9 @@ export const AuthContextProvider = ({ children }) => {
         navigate("/");
 
       }).catch(err => {
-        console.log(err);
+        setLoading(false);
+        console.log(err.response.data);
+        setAuthError(err.response.data.message)
       })
   }
   const logoutHandler = () => {
@@ -156,7 +164,8 @@ export const AuthContextProvider = ({ children }) => {
           contactInfo,
           setContactInfo,
           convId,
-          setConvId
+          setConvId,
+          authError
         }
 
       }
